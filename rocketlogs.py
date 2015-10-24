@@ -102,10 +102,6 @@ class MmrFrame(tkinter.Frame):
 		mmrDiffHeader = tkinter.Label(self, text="TS change", font=("Verdana", 12));
 		mmrDiffHeader.grid(row=0, column=4, columnspan=2, sticky="ns");
 
-		#self.rows[ROW_DUEL] = self.addRow("Duel", ROW_DUEL, 1);
-		#self.rows[ROW_DOUBLES] = self.addRow("Doubles", ROW_DOUBLES, 2);
-		#self.rows[ROW_STANDARD] = self.addRow("Standard", ROW_STANDARD, 3);
-		#self.rows[ROW_CHAOS] = self.addRow("Chaos", ROW_CHAOS, 4);
 		self.rows[ROW_UNRANKED] = self.addRow("Unranked", ROW_UNRANKED, 0);
 		self.rows[ROW_RANKED_DUEL] = self.addRow("Ranked Duel", ROW_RANKED_DUEL, 10);
 		self.rows[ROW_RANKED_DOUBLES] = self.addRow("Ranked Doubles", ROW_RANKED_DOUBLES, 11);
@@ -204,7 +200,7 @@ class MmrFrame(tkinter.Frame):
 		self.plot.autoscale_view(tight=False);
 		self.canvas.draw();
 
-findMmrLineRegex = re.compile("\"PlaylistId\":([0-9]+).+\"PlayerName\":\"([^\"]+)\",\"SkillMu\":([0-9.]+),\"SkillSigma\":([0-9.]+),");
+findMmrLineRegex = re.compile("ClientSetSkill Playlist=([0-9]+) Mu=([0-9.]+) Sigma=([0-9.]+)");
 def update(mmr):
 	global logFileSize;
 	# Crude check to see if rocket league has restarted, which resets the log.
@@ -218,12 +214,11 @@ def update(mmr):
 		# TrueSkill data
 		trueskillData = findMmrLineRegex.search(line);
 		if trueskillData:
-			print("Found skillmu line. playlist=%d, name=%s, mu=%f, sigma=%f" % (int(trueskillData.group(1)), trueskillData.group(2), float(trueskillData.group(3)), float(trueskillData.group(4))));
+			print("Found skillmu line. playlist=%d, mu=%f, sigma=%f" % (int(trueskillData.group(1)), float(trueskillData.group(2)), float(trueskillData.group(3))));
 			dataPoint = {
 				'Playlist': int(trueskillData.group(1)),
-				'Name': trueskillData.group(2),
-				'Mu': float(trueskillData.group(3)),
-				'Sigma': float(trueskillData.group(4))
+				'Mu': float(trueskillData.group(2)),
+				'Sigma': max(2.5, float(trueskillData.group(3)))
 			};
 			mmr.addDataPoint(dataPoint);
 
