@@ -258,7 +258,7 @@ lastLogOffset = 0;
 
 
 master = tkinter.Tk();
-master.wm_title("RocketLogs v0.1.0");
+master.wm_title("RocketLogs v0.1.1");
 masterFrame = tkinter.Frame(master);
 masterFrame.pack();
 mmr = MmrFrame(masterFrame);
