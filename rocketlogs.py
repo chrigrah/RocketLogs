@@ -231,7 +231,7 @@ logFileSize = 0;
 def openLog():
 	try:
 		global logFile;
-		logFile = open('../Launch.log', mode='r');
+		logFile = open('../Launch.log', mode='r', encoding='utf-8', errors='ignore');
 	except:
 		tkinter.messagebox.showerror("Failed to open Launch.log", "The program could not open Launch.log. Please place the program at Documents/My Games/Rocket League/TAGame/Logs/RocketLogs/.");
 		raise
